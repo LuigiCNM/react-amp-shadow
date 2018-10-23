@@ -4,7 +4,8 @@
   "description": "React-AMP-Shadow is a lightweight react component that can fetch and render pre-existing AMP Documents from any source",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "pretty-quick --staged"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/chinds185a/react-amp-shadow/issues"
   },
-  "homepage": "https://github.com/chinds185a/react-amp-shadow#readme"
+  "homepage": "https://github.com/chinds185a/react-amp-shadow#readme",
+  "dependencies": {
+    "eslint-plugin-prettier": "^3.0.0",
+    "husky": "^1.1.2",
+    "prettier": "^1.14.3",
+    "pretty-quick": "^1.8.0"
+  }
 }
