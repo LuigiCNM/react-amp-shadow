@@ -4,8 +4,12 @@
   "description": "React-AMP-Shadow is a lightweight react component that can fetch and render pre-existing AMP Documents from any source",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "precommit": "pretty-quick --staged"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "repository": {
     "type": "git",
