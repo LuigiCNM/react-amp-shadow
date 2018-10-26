@@ -26,7 +26,7 @@ yarn add react-amp-shadow
 <script async src="https://cdn.ampproject.org/shadow-v0.js" />
 ```
 
-#### pass AMP url and elements to remove to the react-amp-shadow component
+#### Pass AMP url and elements to remove to the react-amp-shadow component
 
 ```
 import AMPShadowDocument from 'react-amp-shadow';
