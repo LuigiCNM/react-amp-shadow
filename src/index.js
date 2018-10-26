@@ -24,21 +24,25 @@ class AMPShadowDocument extends Component {
   }
 
   componentDidMount() {
-    this.getAmpDocument(this.props.src);
+    this.getAmpDocument(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getAmpDocument(nextProps.src);
+    this.getAmpDocument(nextProps);
+  }
+
+  componentWillUnmount() {
+    this.closeAmpShadowDocument();
   }
 
   render() {
     const { documentFetchError, documentLoading } = this.state;
 
     if (documentFetchError) {
+      console.log(`Error fetching AMP Document ${documentFetchError}`);
       return (
         <div>
           <h2>Error fetching AMP document</h2>
-          <h4>{documentFetchError}</h4>
         </div>
       );
     }
@@ -48,34 +52,40 @@ class AMPShadowDocument extends Component {
         className="amp-container"
         ref={ref => (this.ampDocumentContainer = ref)}
       >
-        {documentLoading && <h2>Loading......</h2>}
+        {documentLoading && <h2>Loading....</h2>}
       </div>
     );
   }
 
-  getAmpDocument(url) {
+  getAmpDocument(props) {
+    const { src, removeElements = [] } = props;
     this.setState({ documentLoading: true });
-
     axios({
       method: "get",
-      url: url,
+      url: src,
       responseType: "document"
     })
-      .then(({ data }) => this.attachAmpShadowDocument(data, url))
-      .catch(error => this.setState({ documentFetchError: error }));
+      .then(({ data }) =>
+        this.attachAmpShadowDocument(data, src, removeElements)
+      )
+      .catch(error =>
+        this.setState({ documentFetchError: error, documentLoading: false })
+      );
   }
 
-  attachAmpShadowDocument(data, url) {
+  attachAmpShadowDocument(data, src, removeElements) {
     return this.ampIsReady
       .then(amp => {
+        this.hideDomElements(data, removeElements);
+
         // Replace the old shadow root with a new div element.
-        const oldShadowRoot = this.ampShadowDocumentRoot;
+        const oldAmpShadowDocumentRoot = this.ampShadowDocumentRoot;
         this.ampShadowDocumentRoot = document.createElement("div");
 
-        if (oldShadowRoot) {
+        if (oldAmpShadowDocumentRoot) {
           this.ampDocumentContainer.replaceChild(
             this.ampShadowDocumentRoot,
-            oldShadowRoot
+            oldAmpShadowDocumentRoot
           );
         } else {
           this.ampDocumentContainer.appendChild(this.ampShadowDocumentRoot);
@@ -84,20 +94,31 @@ class AMPShadowDocument extends Component {
         this.ampShadoDocument = amp.attachShadowDoc(
           this.ampShadowDocumentRoot,
           data,
-          url
+          src
         );
 
         this.setState({ documentLoading: false });
       })
-      .catch(error => console.error(error));
+      .catch(error =>
+        this.setState({ documentFetchError: error, documentLoading: false })
+      );
   }
 
-  hideDomElements() {
-    // Hide unwanted DOM elemements from AMP document e.g. Navigation
+  hideDomElements(document, removeElements) {
+    if (removeElements.length < 1) {
+      return;
+    }
+
+    const elementsToRemove = removeElements.join();
+    document
+      .querySelectorAll(elementsToRemove)
+      .forEach(element => element.parentNode.removeChild(element));
   }
 
   closeAmpShadowDocument() {
-    // Close shadow document by cleaning up internal state
+    if (typeof this.ampShadoDocument.close === "function") {
+      this.ampShadoDocument.close();
+    }
   }
 
   handleNavigationEvents() {
