@@ -147,7 +147,7 @@ class AMPShadowDocument extends Component {
     }
 
     if (anchorTag && anchorTag.href) {
-      const url = new URL(a.href);
+      const url = new URL(anchorTag.href);
       if (url.origin === window.location.origin) {
         event.preventDefault();
         this.closeAmpShadowDocument();
