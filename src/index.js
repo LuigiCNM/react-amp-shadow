@@ -130,7 +130,7 @@ class AMPShadowDocument extends Component {
 
     if (event.path) {
       const eventPath = event.path;
-      eventPath.map(index => {
+      eventPath.map((element, index) => {
         const node = eventPath[index];
 
         if (node.tagName === "A") {

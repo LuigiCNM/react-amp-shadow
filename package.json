@@ -1,6 +1,6 @@
 {
   "name": "react-amp-shadow",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React-AMP-Shadow is a lightweight react component that can fetch and render pre-existing AMP Documents from any source",
   "main": "build/index.js",
   "scripts": {
