@@ -1,6 +1,6 @@
 {
   "name": "react-amp-shadow",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "React-AMP-Shadow is a lightweight react component that can fetch and render pre-existing AMP Documents from any source",
   "main": "build/index.js",
   "scripts": {
@@ -31,8 +31,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.6.0",
-    "react-spinkit": "^3.0.0",
-    "webpack": "^4.23.1"
+    "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -45,6 +44,7 @@
     "husky": "^1.1.2",
     "prettier": "^1.14.3",
     "pretty-quick": "^1.8.0",
+    "webpack": "^4.23.1",
     "webpack-cli": "^3.1.2"
   }
 }

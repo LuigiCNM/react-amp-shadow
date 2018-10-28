@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
 
 class AMPShadowDocument extends Component {
@@ -10,8 +11,6 @@ class AMPShadowDocument extends Component {
       documentLoading: false
     };
 
-    this.xhr_ = null;
-
     this.ampDocumentContainer = null;
 
     this.ampShadoDocument = null;
@@ -21,10 +20,16 @@ class AMPShadowDocument extends Component {
     this.ampIsReady = new Promise(resolve => {
       (window.AMP = window.AMP || []).push(resolve);
     });
+
+    this.boundHandleNavigationEvents = this.handleNavigationEvents.bind(this);
   }
 
   componentDidMount() {
     this.getAmpDocument(this.props);
+    this.ampDocumentContainer.addEventListener(
+      "click",
+      this.boundHandleNavigationEvents
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,7 +44,6 @@ class AMPShadowDocument extends Component {
     const { documentFetchError, documentLoading } = this.state;
 
     if (documentFetchError) {
-      console.log(`Error fetching AMP Document ${documentFetchError}`);
       return (
         <div>
           <h2>Error fetching AMP document</h2>
@@ -99,9 +103,9 @@ class AMPShadowDocument extends Component {
 
         this.setState({ documentLoading: false });
       })
-      .catch(error =>
-        this.setState({ documentFetchError: error, documentLoading: false })
-      );
+      .catch(error => {
+        this.setState({ documentFetchError: error, documentLoading: false });
+      });
   }
 
   hideDomElements(document, removeElements) {
@@ -121,10 +125,40 @@ class AMPShadowDocument extends Component {
     }
   }
 
-  handleNavigationEvents() {
-    // Handle click events for the same origin
-    // Use react-router-V4
+  handleNavigationEvents(event) {
+    let anchorTag = null;
+
+    if (event.path) {
+      const eventPath = event.path;
+      eventPath.map(index => {
+        const node = eventPath[index];
+
+        if (node.tagName === "A") {
+          anchorTag = node;
+          return;
+        }
+      });
+    } else {
+      let node = event.target;
+      while (node && node.tagName !== "A") {
+        node = node.parentNode;
+      }
+      anchorTag = node;
+    }
+
+    if (anchorTag && anchorTag.href) {
+      const url = new URL(a.href);
+      if (url.origin === window.location.origin) {
+        event.preventDefault();
+        this.closeAmpShadowDocument();
+        this.props.history.push(url.pathname);
+
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 
-export default AMPShadowDocument;
+export default withRouter(AMPShadowDocument);

@@ -29,6 +29,7 @@ yarn add react-amp-shadow
 #### Pass AMP url and elements to remove to the react-amp-shadow component
 
 ```
+import React from 'react'
 import AMPShadowDocument from 'react-amp-shadow';
 
 const elementsToRemove = [
@@ -38,10 +39,20 @@ const elementsToRemove = [
   '[role="banner"]',
 ];
 
-<AMPShadowDocument
-  src='https://www.bbc.co.uk/news/amp/uk-45861683'
-  removeElements={elementsToRemove}
-/>
+const AMPDocument = () => {
+  return (
+    <AMPShadowDocument
+      src='https://www.bbc.co.uk/news/amp/uk-45861683'
+      removeElements={elementsToRemove}
+    />
+  )
+}
+
+export default AMPDocument;
 ```
 
 # ToDo
+
+- [x] Handle navigation with react-router-dom
+- [x] Ability to remove page element from AMP document e.g. navigation and footer
+- [ ] Tests
